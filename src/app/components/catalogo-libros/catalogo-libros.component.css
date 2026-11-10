@@ -1,0 +1,58 @@
+.catalogo-libros-container {
+  min-height: 100vh;
+}
+
+.filter-card {
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+}
+
+.filter-card .card-body {
+  padding: 1.25rem;
+}
+
+.filter-card .form-check {
+  margin-bottom: 0.65rem;
+}
+
+.book-cover {
+  height: 240px;
+  object-fit: cover;
+}
+
+.book-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.book-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0.75rem 1.25rem rgba(0, 0, 0, 0.08);
+}
+
+.catalog-price-display {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0d6efd;
+}
+
+.card-body .list-unstyled li {
+  margin-bottom: 0.45rem;
+}
+
+.book-rating span {
+  color: #ddd;
+}
+
+.book-rating span.filled {
+  color: #ffc107;
+}
+
+.book-rating-row {
+  min-height: 2.5rem;
+}
+
+@media (max-width: 991.98px) {
+  .filter-card {
+    max-height: none;
+  }
+}

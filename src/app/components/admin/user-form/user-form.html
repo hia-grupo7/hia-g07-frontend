@@ -1,0 +1,121 @@
+<div *ngIf="currentRol === 'Administrador'; else accesoDenegadoForm" class="container mt-4">
+  
+  <div class="row mb-3">
+    <div class="col">
+      <h2 class="fw-bold text-dark">
+        {{ accion === 'agregar' ? 'Registrar Nuevo Personal' : 'Modificar Datos de Personal' }}
+      </h2>
+      <p class="text-muted">Completá el formulario para gestionar los accesos del marketplace.</p>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm max-w-lg mx-auto">
+    <div class="card-body p-4">
+      
+      <form [formGroup]="userForm" (ngSubmit)="guardar()">
+        <div class="row g-3">
+          
+          <div class="col-md-6">
+            <label class="form-label small fw-bold text-secondary">Nombre</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              formControlName="nombre"
+              [ngClass]="{'is-invalid': esCampoInvalido('nombre')}"
+            />
+            <div class="invalid-feedback">El nombre es obligatorio.</div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small fw-bold text-secondary">Apellido</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              formControlName="apellido"
+              [ngClass]="{'is-invalid': esCampoInvalido('apellido')}"
+            />
+            <div class="invalid-feedback">El apellido es obligatorio.</div>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label small fw-bold text-secondary">Email Corporativo</label>
+            <input 
+              type="email" 
+              class="form-control" 
+              formControlName="email"
+              [ngClass]="{'is-invalid': esCampoInvalido('email')}"
+            />
+            <div class="invalid-feedback">
+              <span *ngIf="userForm.get('email')?.errors?.['required']">El correo electrónico es requerido.</span>
+              <span *ngIf="userForm.get('email')?.errors?.['email']">Debe ingresar un formato de email válido (ej@correo.com).</span>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label small fw-bold text-secondary">Contrasenia</label>
+            <input 
+              type="password" 
+              class="form-control" 
+              formControlName="password"
+              [ngClass]="{'is-invalid': esCampoInvalido('password')}"
+            />
+            <div class="invalid-feedback">
+              <span *ngIf="userForm.get('password')?.errors?.['required']">La contrasenia es requerida.</span>
+            </div>
+          </div>
+
+
+          <div class="col-md-6">
+            <label class="form-label small fw-bold text-secondary">Rol asignado</label>
+            <select 
+              class="form-select" 
+              formControlName="rol"
+              [ngClass]="{'is-invalid': esCampoInvalido('rol')}"
+            >
+              <option value="" disabled selected>Seleccione una opción...</option>
+              <option value="Empleado">Empleado</option>
+              <option value="Administrador">Administrador</option>
+            </select>
+            <div class="invalid-feedback">Debe asignar un rol operativo.</div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small fw-bold text-secondary">Estado Inicial</label>
+            <select class="form-select" formControlName="estado">
+              <option [value]="true">Activo</option>
+              <option [value]="false">Inactivo</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+          <button type="button" class="btn btn-light" routerLinkActive="active" [routerLink]="['/user-list']">
+            Cancelar
+          </button>
+          
+          <button 
+            type="submit" 
+            class="btn btn-primary px-4" 
+            [disabled]="userForm.invalid"
+          >
+            {{ accion === 'agregar' ? 'Dar de Alta' : 'Guardar Cambios' }}
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<ng-template #accesoDenegadoForm>
+  <div class="container d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+    <div class="text-center p-5 card shadow-sm border-0" style="max-width: 450px;">
+      <h3 class="fw-bold text-danger mb-2">Acceso Denegado</h3>
+      <p class="text-muted mb-0">
+        Esta sección es crítica. Solo los usuarios con rol de 
+        <strong>Administrador</strong> poseen los privilegios requeridos para dar de alta o modificar personal.
+      </p>
+    </div>
+  </div>
+</ng-template>

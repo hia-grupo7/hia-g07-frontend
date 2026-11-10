@@ -1,0 +1,8 @@
+.form-label {
+  font-weight: 600;
+  color: #34495e;
+}
+
+textarea {
+  resize: vertical;
+}

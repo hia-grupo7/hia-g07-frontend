@@ -1,0 +1,95 @@
+<div class="container d-flex align-items-center justify-content-center min-vh-100">
+  <div class="card p-4 shadow-lg border-0 rounded-4 w-100" style="max-width: 420px;">
+    
+    <!-- Mensaje de error general -->
+    <div *ngIf="mensajeError" class="alert alert-danger rounded-3 text-center" role="alert">
+      {{ mensajeError }}
+    </div>
+
+    <!-- VISTA 1: LOGIN TRADICIONAL & SOCIAL -->
+    <div *ngIf="!requiere2FA">
+      <div class="text-center mb-4">
+        <h2 class="fw-bold text-gradient">Iniciar Sesión</h2>
+        <p class="text-muted">¡Hola de nuevo! Ingresa a Rayuela</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="iniciarSesion()">
+        <!-- Email -->
+        <div class="mb-3">
+          <label for="email" class="form-label fw-semibold">Correo Electrónico</label>
+          <input type="email" id="email" formControlName="email" class="form-control rounded-3"
+                 [ngClass]="{ 'is-invalid': f['email'].touched && f['email'].errors }" placeholder="ejemplo@correo.com">
+          <div *ngIf="f['email'].touched && f['email'].errors" class="invalid-feedback">
+            <span *ngIf="f['email'].errors?.['required']">El email es obligatorio.</span>
+            <span *ngIf="f['email'].errors?.['email']">Ingrese un email válido.</span>
+          </div>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="mb-4">
+          <label for="password" class="form-label fw-semibold">Contraseña</label>
+          <input type="password" id="password" formControlName="password" class="form-control rounded-3"
+                 [ngClass]="{ 'is-invalid': f['password'].touched && f['password'].errors }" placeholder="Ingresa tu contraseña">
+          <div *ngIf="f['password'].touched && f['password'].errors" class="invalid-feedback">
+            <span *ngIf="f['password'].errors?.['required']">La contraseña es obligatoria.</span>
+            <span *ngIf="f['password'].errors?.['minlength']">Debe tener al menos 6 caracteres.</span>
+          </div>
+        </div>
+
+        <!-- Botón Ingresar -->
+        <button type="submit" class="btn btn-primary w-100 py-2.5 rounded-3 fw-bold mb-3" [disabled]="cargando">
+          <span *ngIf="cargando" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          Ingresar
+        </button>
+      </form>
+
+      <!-- Divisor para Redes Sociales -->
+      <div class="position-relative my-4 text-center">
+        <hr class="text-muted">
+        <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted fs-7">O iniciar con</span>
+      </div>
+
+      <!-- Componentes de Redes Sociales (APIs Google/Facebook) -->
+      <div class="d-flex flex-column gap-2 mb-3">
+        <app-google-login></app-google-login>
+      </div>
+
+      <div class="text-center mt-4">
+        <p class="mb-0 text-muted">¿No tienes cuenta? <a routerLink="/registro" class="text-decoration-none fw-semibold">Regístrate aquí</a></p>
+      </div>
+    </div>
+
+    <!-- VISTA 2: VERIFICACIÓN DEL SEGUNDO FACTOR (2FA) -->
+    <div *ngIf="requiere2FA">
+      <div class="text-center mb-4">
+        <div class="otp-icon-container mb-3 text-primary">
+          <i class="fas fa-shield-alt fa-3x"></i>
+        </div>
+        <h3 class="fw-bold text-gradient">Verificación de Seguridad</h3>
+        <p class="text-muted">Hemos enviado un código OTP de 6 dígitos a tu correo electrónico registrado.</p>
+      </div>
+
+      <form [formGroup]="otpForm" (ngSubmit)="verificarOTP()">
+        <div class="mb-4">
+          <label for="otpCode" class="form-label fw-semibold text-center w-100">Código de Verificación</label>
+          <input type="text" id="otpCode" formControlName="otpCode" class="form-control text-center fs-4 rounded-3 letter-spacing-lg"
+                 [ngClass]="{ 'is-invalid': o['otpCode'].touched && o['otpCode'].errors }" placeholder="000000" maxlength="6">
+          <div *ngIf="o['otpCode'].touched && o['otpCode'].errors" class="invalid-feedback text-center">
+            <span *ngIf="o['otpCode'].errors?.['required']">El código es obligatorio.</span>
+            <span *ngIf="o['otpCode'].errors?.['pattern']">Debe ser un código numérico de 6 dígitos.</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 py-2.5 rounded-3 fw-bold mb-2" [disabled]="cargando">
+          <span *ngIf="cargando" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          Verificar y Entrar
+        </button>
+
+        <button type="button" class="btn btn-link w-100 text-muted text-decoration-none" (click)="cancelar2FA()">
+          Volver al Login
+        </button>
+      </form>
+    </div>
+
+  </div>
+</div>

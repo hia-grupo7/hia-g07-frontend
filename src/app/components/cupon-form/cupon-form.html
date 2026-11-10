@@ -1,0 +1,96 @@
+<div *ngIf="currentUserRol === 'Administrador' || currentUserRol === 'Empleado'" class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm border-0">
+        
+        <div class="card-header bg-dark text-white p-3">
+          <h4 class="mb-0 fw-bold">
+            {{ accion === 'agregar' ? 'Agregar Cupón de Descuento' : 'Modificar Cupón de Descuento' }}
+          </h4>
+          <small *ngIf="currentUserRol === 'Empleado'" class="text-warning">
+            <i class="bi bi-info-circle-fill me-1"></i> Vista de Solo Lectura (Modo Empleado)
+          </small>
+        </div>
+
+        <div class="card-body p-4">
+          <form [formGroup]="cuponForm" (ngSubmit)="guardar()">
+            
+            <div class="mb-3">
+              <label for="codigo" class="form-label fw-semibold">Código del Cupón</label>
+              <input type="text" id="codigo" class="form-control" formControlName="codigo" placeholder="Ej: DESCUENTO10" [className]="esCampoInvalido('codigo') ? 'form-control is-invalid' : 'form-control'">
+              
+              <div *ngIf="esCampoInvalido('codigo')" class="invalid-feedback">
+                <div *ngIf="cuponForm.get('codigo')?.hasError('required')">El código es obligatorio.</div>
+                <div *ngIf="cuponForm.get('codigo')?.hasError('pattern')">El código no debe contener espacios en blanco.</div>
+                <div *ngIf="cuponForm.get('codigo')?.hasError('codigoDuplicado')">Ese código ya está en uso. Elegí otro.</div>
+              </div>
+            </div>
+
+            <div *ngIf="mensajeError" class="alert alert-danger d-flex align-items-center mt-3" role="alert">
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+              <span>{{ mensajeError }}</span>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="descuento" class="form-label fw-semibold">Porcentaje de Descuento (%)</label>
+                <input type="number" id="descuento" class="form-control" formControlName="descuento" placeholder="1 a 100" [className]="esCampoInvalido('descuento') ? 'form-control is-invalid' : 'form-control'">
+                
+                <div *ngIf="esCampoInvalido('descuento')" class="invalid-feedback">
+                  El descuento es requerido y debe ser un valor numérico estrictamente entre 1 y 100.
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="usosMaximos" class="form-label fw-semibold">Cantidad de Usos Máximos</label>
+                <input type="number" id="usosMaximos" class="form-control" formControlName="usosMaximos" placeholder="Ej: 100" [className]="esCampoInvalido('usosMaximos') ? 'form-control is-invalid' : 'form-control'">
+                
+                <div *ngIf="esCampoInvalido('usosMaximos')" class="invalid-feedback">
+                  Debe indicar un número entero positivo mayor o igual a 1.
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="fechaVigencia" class="form-label fw-semibold">Fecha de Vencimiento</label>
+                <input type="date" id="fechaVigencia" class="form-control" formControlName="fechaVigencia" [className]="esCampoInvalido('fechaVigencia') ? 'form-control is-invalid' : 'form-control'">
+                
+                <div *ngIf="esCampoInvalido('fechaVigencia')" class="invalid-feedback">
+                  <div *ngIf="cuponForm.get('fechaVigencia')?.hasError('required')">La fecha límite de uso es obligatoria.</div>
+                  <div *ngIf="cuponForm.get('fechaVigencia')?.hasError('fechaPasada')">La fecha de vigencia debe ser posterior o igual al día de hoy.</div>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="activo" class="form-label fw-semibold">Estado de Habilitación</label>
+                <select id="activo" class="form-select" formControlName="activo">
+                  <option [ngValue]="true">Activo</option>
+                  <option [ngValue]="false">Inactivo</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <a [routerLink]="['/cupon-dashboard']" class="btn btn-outline-secondary px-4">
+                Volver al Panel
+              </a>
+              
+              <button *ngIf="currentUserRol === 'Administrador'" type="submit" class="btn btn-success px-4" [disabled]="cuponForm.invalid">
+                <i class="bi bi-save me-2"></i> Confirmar Guardado
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="currentUserRol !== 'Administrador' && currentUserRol !== 'Empleado'" class="container mt-5">
+  <div class="alert alert-danger text-center shadow-sm" role="alert">
+    <h4 class="alert-heading fw-bold"><i class="bi bi-exclamation-triangle-fill me-2"></i>Acceso Denegado</h4>
+    <p>No posees los permisos necesarios para interactuar con el formulario de cupones.</p>
+  </div>
+</div>

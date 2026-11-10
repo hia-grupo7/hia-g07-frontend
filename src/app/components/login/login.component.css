@@ -1,0 +1,38 @@
+/* Gradiente para textos destacados */
+.text-gradient {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Sombras y bordes redondeados premium */
+.card {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08) !important;
+  background-color: #ffffff;
+}
+
+/* Efectos en Inputs */
+.form-control:focus {
+  border-color: #2a5298;
+  box-shadow: 0 0 0 0.25rem rgba(42, 82, 152, 0.15);
+}
+
+/* Botón Primary Premium con hover suave */
+.btn-primary {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  border: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(42, 82, 152, 0.3);
+}
+
+/* Espaciado de letra para el código de 2FA */
+.letter-spacing-lg {
+  letter-spacing: 8px;
+}
+
+.fs-7 {
+  font-size: 0.85rem;
+}

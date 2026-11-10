@@ -1,0 +1,90 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-xl-10">
+      <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
+        <div>
+          <h2 class="fw-bold text-dark mb-1">
+            {{ accion === 'agregar' ? 'Registrar nuevo libro' : 'Editar libro' }}
+          </h2>
+          <p class="text-muted mb-0">Completá los datos bibliográficos y de inventario.</p>
+        </div>
+        <a class="btn btn-outline-secondary" [routerLink]="rutaVolver">Volver</a>
+      </div>
+
+      <div class="alert alert-danger" *ngIf="mensajeError">{{ mensajeError }}</div>
+
+      <form class="card border-0 shadow-sm" [formGroup]="libroForm" (ngSubmit)="guardar()">
+        <div class="card-body p-4">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">ISBN</label>
+              <input class="form-control" formControlName="isbn" [class.is-invalid]="esCampoInvalido('isbn')" />
+            </div>
+            <div class="col-md-8">
+              <label class="form-label">Título</label>
+              <input class="form-control" formControlName="title" [class.is-invalid]="esCampoInvalido('title')" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Autor</label>
+              <input class="form-control" formControlName="author" [class.is-invalid]="esCampoInvalido('author')" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Editorial</label>
+              <input class="form-control" formControlName="editorial" [class.is-invalid]="esCampoInvalido('editorial')" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Categoría</label>
+              <select class="form-select" formControlName="category">
+                <option *ngFor="let categoria of categorias" [value]="categoria">{{ categoria }}</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Idioma</label>
+              <select class="form-select" formControlName="language">
+                <option *ngFor="let idioma of idiomas" [value]="idioma">{{ idioma }}</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Fecha publicación</label>
+              <input type="date" class="form-control" formControlName="publicationDate" [class.is-invalid]="esCampoInvalido('publicationDate')" />
+            </div>
+            <div class="col-12">
+              <label class="form-label">Descripción</label>
+              <textarea class="form-control" rows="4" formControlName="description" [class.is-invalid]="esCampoInvalido('description')"></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label">URL de portada</label>
+              <input class="form-control" formControlName="bookCover" [class.is-invalid]="esCampoInvalido('bookCover')" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Puntaje</label>
+              <input type="number" min="0" max="5" class="form-control" formControlName="score" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Ingreso</label>
+              <input type="date" class="form-control" formControlName="entryDate" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Stock</label>
+              <input type="number" min="0" class="form-control" formControlName="stock" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Reservados</label>
+              <input type="number" min="0" class="form-control" formControlName="reserved" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Precio</label>
+              <input type="number" min="0" step="0.01" class="form-control" formControlName="price" />
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer bg-white border-0 p-4 pt-0 text-end">
+          <button class="btn btn-primary px-4" type="submit">
+            {{ accion === 'agregar' ? 'Registrar libro' : 'Guardar cambios' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

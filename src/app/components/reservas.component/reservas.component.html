@@ -1,0 +1,39 @@
+<div style="max-width: 800px; margin: 40px auto; font-family: sans-serif;">
+  <h2>Mi Historial de Reservas</h2>
+
+  <!-- Mensaje si no hay nada -->
+  <div *ngIf="reservas.length === 0" style="padding: 20px; background-color: #f8f9fa; border-radius: 8px; text-align: center;">
+    <p>No tenés ninguna reserva registrada en tu cuenta.</p>
+  </div>
+
+  <!-- Lista de Reservas -->
+  <div *ngFor="let reserva of reservas" style="border: 1px solid #ddd; padding: 20px; margin-bottom: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; background-color: #fff;">
+    <div>
+      <h3 style="margin: 0 0 10px 0; color: #333;">Reserva #{{ reserva.id }}</h3>
+      
+      <!-- Si el backend trae el modelo Book incluido, podemos mostrar el título -->
+      <p style="margin: 5px 0;">
+        <strong>Libro:</strong> {{ reserva.book?.titulo || 'ID Libro: ' + reserva.idLibro }}
+      </p>
+      
+      <p style="margin: 5px 0;">
+        <strong>Estado:</strong> 
+        <span [ngStyle]="{'color': reserva.estado === 'activa' ? 'green' : 'red', 'font-weight': 'bold'}">
+          {{ reserva.estado | uppercase }}
+        </span>
+      </p>
+      
+      <p style="margin: 5px 0; color: #666;">
+        <strong>Vencimiento:</strong> {{ reserva.fechaVencimiento | date:'dd/MM/yyyy HH:mm' }} hs.
+      </p>
+    </div>
+    
+    <!-- Botón Cancelar (Sólo se muestra si está activa) -->
+    <button 
+      *ngIf="reserva.estado === 'activa'"
+      (click)="cancelar(reserva.id)"
+      style="background-color: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background-color 0.3s;">
+      Cancelar Reserva
+    </button>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+﻿<div class="cart-shell p-4">
+  <div class="cart-header d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-1">Tu carrito</h2>
+      <p class="text-muted mb-0">Revisa tus libros antes de finalizar la compra</p>
+    </div>
+    <button class="btn btn-close" aria-label="Cerrar carrito" (click)="cartService.closeCart()"></button>
+  </div>
+
+  <div class="cart-items">
+    <div *ngIf="carrito.length === 0" class="empty-state p-4 text-center">
+      <p class="mb-2"><strong>El carrito está vacío</strong></p>
+      <p class="text-muted">Agrega libros desde el catálogo o la página de detalle.</p>
+    </div>
+
+    <div *ngFor="let item of carrito" class="cart-item mb-3 p-3 rounded-3 bg-white shadow-sm">
+      <div class="d-flex gap-3 align-items-start">
+        <img *ngIf="item.imagen" [src]="item.imagen" [alt]="item.tituloLibro" class="cart-item-image" />
+        <div class="flex-1">
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <h5 class="mb-0">{{ item.tituloLibro }}</h5>
+            <span class="badge" [class.text-bg-primary]="item.tipo === 'compra'" [class.text-bg-warning]="item.tipo === 'reserva'">
+              {{ item.tipo === 'reserva' ? 'Reserva' : 'Compra' }}
+            </span>
+          </div>
+          <p class="text-muted small mb-2">{{ item.autor }}</p>
+          <p class="mb-1">Cantidad: <strong>{{ item.cantidad }}</strong></p>
+          <p class="mb-0">Precio unitario: <strong>${{ obtenerPrecio(item) | number:'1.2-2' }}</strong></p>
+        </div>
+        <button class="btn btn-link text-danger p-0" type="button" (click)="removeItem(item)">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cart-footer mt-4">
+    <div class="d-flex justify-content-between text-muted small mb-2">
+      <span>{{ comprasCount }} para comprar</span>
+      <span>{{ reservasCount }} reserva(s)</span>
+    </div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <span class="fw-semibold">Total a pagar</span>
+      <span class="fs-5 fw-bold">${{ total | number:'1.2-2' }}</span>
+    </div>
+    <button class="btn btn-primary w-100" type="button" (click)="pagar()" [disabled]="cargando || carrito.length === 0">
+      {{ cargando ? 'Procesando compra...' : 'Pagar compras con Mercado Pago' }}
+    </button>
+  </div>
+</div>

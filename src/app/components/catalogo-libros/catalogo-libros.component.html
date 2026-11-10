@@ -1,0 +1,211 @@
+<div class="container-fluid catalogo-libros-container py-4">
+  <div class="row">
+    <aside class="col-lg-3 mb-4">
+      <div class="card filter-card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Filtros</h5>
+          <div class="mb-4">
+            <h6 class="mb-2">Categoría</h6>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="categoria1" [checked]="selectedCategory === 'history'" (change)="onCategoryFilterChange('history', $any($event.target).checked)" />
+              <label class="form-check-label" for="categoria1">Historia</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="categoria2" [checked]="selectedCategory === 'science'" (change)="onCategoryFilterChange('science', $any($event.target).checked)" />
+              <label class="form-check-label" for="categoria2">Ciencia</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="categoria3" [checked]="selectedCategory === 'fiction'" (change)="onCategoryFilterChange('fiction', $any($event.target).checked)" />
+              <label class="form-check-label" for="categoria3">Ficción</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="categoria4" [checked]="selectedCategory === 'biography'" (change)="onCategoryFilterChange('biography', $any($event.target).checked)" />
+              <label class="form-check-label" for="categoria4">Biografía</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="categoria5" [checked]="selectedCategory === 'technology'" (change)="onCategoryFilterChange('technology', $any($event.target).checked)" />
+              <label class="form-check-label" for="categoria5">Tecnología</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="categoria6" [checked]="selectedCategory === 'philosophy'" (change)="onCategoryFilterChange('philosophy', $any($event.target).checked)" />
+              <label class="form-check-label" for="categoria6">Filosofía</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="categoria7" [checked]="selectedCategory === 'mystery'" (change)="onCategoryFilterChange('mystery', $any($event.target).checked)" />
+              <label class="form-check-label" for="categoria7">Misterio</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="categoria8" [checked]="selectedCategory === 'romance'" (change)="onCategoryFilterChange('romance', $any($event.target).checked)" />
+              <label class="form-check-label" for="categoria8">Romance</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="categoria9" [checked]="selectedCategory === 'suspense'" (change)="onCategoryFilterChange('suspense', $any($event.target).checked)" />
+              <label class="form-check-label" for="categoria9">Suspenso</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="categoria10" [checked]="selectedCategory === 'crime'" (change)="onCategoryFilterChange('crime', $any($event.target).checked)" />
+              <label class="form-check-label" for="categoria10">Crimen</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="categoria11" [checked]="selectedCategory === 'psychology'" (change)="onCategoryFilterChange('psychology', $any($event.target).checked)" />
+              <label class="form-check-label" for="categoria11">Psicología</label>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <h6 class="mb-2">Fecha publicación</h6>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="fecha1" [checked]="selectedPublicationDate === 'last-year'" (change)="onPublicationDateFilterChange('last-year', $any($event.target).checked)" />
+              <label class="form-check-label" for="fecha1">Último año</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="fecha2" [checked]="selectedPublicationDate === 'last-5-years'" (change)="onPublicationDateFilterChange('last-5-years', $any($event.target).checked)" />
+              <label class="form-check-label" for="fecha2">Últimos 5 años</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="fecha3" [checked]="selectedPublicationDate === 'before-2020'" (change)="onPublicationDateFilterChange('before-2020', $any($event.target).checked)" />
+              <label class="form-check-label" for="fecha3">Antes de 2020</label>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <h6 class="mb-2">Lenguajes</h6>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="lenguaje1" [checked]="selectedLanguage === 'spa'" (change)="onLanguageFilterChange('spa', $any($event.target).checked)" />
+              <label class="form-check-label" for="lenguaje1">Español</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="lenguaje2" [checked]="selectedLanguage === 'eng'" (change)="onLanguageFilterChange('eng', $any($event.target).checked)" />
+              <label class="form-check-label" for="lenguaje2">Inglés</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="lenguaje3" [checked]="selectedLanguage === 'por'" (change)="onLanguageFilterChange('por', $any($event.target).checked)" />
+              <label class="form-check-label" for="lenguaje3">Portugués</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="lenguaje4" [checked]="selectedLanguage === 'fre'" (change)="onLanguageFilterChange('fre', $any($event.target).checked)" />
+              <label class="form-check-label" for="lenguaje4">Francés</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="lenguaje5" [checked]="selectedLanguage === 'ger'" (change)="onLanguageFilterChange('ger', $any($event.target).checked)" />
+              <label class="form-check-label" for="lenguaje5">Alemán</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="lenguaje6" [checked]="selectedLanguage === 'tur'" (change)="onLanguageFilterChange('tur', $any($event.target).checked)" />
+              <label class="form-check-label" for="lenguaje6">Turco</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="lenguaje7" [checked]="selectedLanguage === 'heb'" (change)="onLanguageFilterChange('heb', $any($event.target).checked)" />
+              <label class="form-check-label" for="lenguaje7">Hebreo</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="lenguaje8" [checked]="selectedLanguage === 'chi'" (change)="onLanguageFilterChange('chi', $any($event.target).checked)" />
+              <label class="form-check-label" for="lenguaje8">Chino</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="lenguaje9" [checked]="selectedLanguage === 'ita'" (change)="onLanguageFilterChange('ita', $any($event.target).checked)" />
+              <label class="form-check-label" for="lenguaje9">Italiano</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="lenguaje10" [checked]="selectedLanguage === 'jpn'" (change)="onLanguageFilterChange('jpn', $any($event.target).checked)" />
+              <label class="form-check-label" for="lenguaje10">Japonés</label>
+            </div>
+          </div>
+
+          <div>
+            <h6 class="mb-2">Oferta</h6>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="oferta1" />
+              <label class="form-check-label" for="oferta1">Recomendados</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="oferta2" />
+              <label class="form-check-label" for="oferta2">Nuevas llegadas</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="col-lg-9">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
+        <div>
+          <h2 class="mb-1">Catálogo de libros</h2>
+          <p class="text-muted mb-0">Explora los libros disponibles y agrega tus favoritos al carrito.</p>
+        </div>
+
+        <form class="search-form w-100 w-md-auto" (submit)="$event.preventDefault(); onSearchSubmit()">
+          <div class="input-group">
+            <input
+              class="form-control"
+              type="search"
+              placeholder="Buscar por nombre"
+              aria-label="Buscar libros"
+              [value]="searchTerm"
+              (input)="onSearchInput($any($event.target).value)"
+            />
+            <button class="btn btn-primary" type="submit">Buscar</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-sm-6 col-xl-4" *ngFor="let item of inventary">
+          <div class="card h-100 book-card shadow-sm">
+            <img [src]="item.book.bookCover" class="card-img-top book-cover" [alt]="item.book.title"
+              (error)="$any($event.target).src='https://placehold.co/300x400/e9ecef/6c757d?text=Sin+Portada'" />
+            <div class="card-body d-flex flex-column">
+              <div>
+                <h5 class="card-title mb-1">{{ item.book.title }}</h5>
+                <p class="text-muted small mb-2">{{ item.book.author }}</p>
+              </div>
+
+              <p class="text-uppercase text-secondary small mb-2">{{ getCategoryLabel(item.book.category) }}</p>
+              <p class="card-text text-truncate mb-3">{{ item.book.description }}</p>
+
+              <ul class="list-unstyled small mb-3">
+                <li><strong>Editorial:</strong> {{ item.book.editorial }}</li>
+                <li><strong>Idioma:</strong> {{ getLanguageLabel(item.book.language) }}</li>
+              </ul>
+              <div class="catalog-price-display mb-3">
+                ${{ item.price.toFixed(2) }}
+              </div>
+              <p class="small mb-3" [class.text-success]="hasStock(item)" [class.text-danger]="!hasStock(item)">
+                {{ hasStock(item) ? 'Stock disponible' : 'Sin stock disponible' }}
+              </p>
+
+              <div class="mt-auto">
+                <div class="d-flex justify-content-between align-items-center mb-3 book-rating-row">
+                  <div class="book-rating">
+                    <span *ngFor="let star of [1, 2, 3, 4, 5]; let i = index" class="me-1" [class.filled]="i < item.book.score">&#9733;</span>
+                    <span class="small text-muted">({{ item.book.score }}/5)</span>
+                  </div>
+                </div>
+                <div class="d-grid gap-2">
+                  <button class="btn btn-outline-primary" type="button" [routerLink]="['/catalogo-libros', item.id]">Ver más información</button>
+                  <button class="btn btn-primary" type="button" (click)="addBookToCart(item)" [disabled]="!hasStock(item)">Comprar</button>
+                  <button *ngIf="!hasStock(item)" class="btn btn-outline-secondary" type="button" (click)="reserveBook(item)">Reservar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <nav aria-label="Paginación de libros" class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" type="button" (click)="prevPage()" [disabled]="currentPage === 1">Anterior</button>
+          </li>
+          <li class="page-item" *ngFor="let page of pageNumbers" [class.active]="page === currentPage">
+            <button class="page-link" type="button" (click)="goToPage(page)">{{ page }}</button>
+          </li>
+          <li class="page-item" [class.disabled]="!hasNextPage">
+            <button class="page-link" type="button" (click)="nextPage()" [disabled]="!hasNextPage">Siguiente</button>
+          </li>
+        </ul>
+      </nav>
+    </main>
+  </div>
+</div>
+
