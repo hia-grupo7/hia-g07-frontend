@@ -1,5 +1,30 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
+# ============================================================
+# Secretos y credenciales (NUNCA subir)
+# ============================================================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+id_rsa*
+secrets/
+.secrets/
+credentials.json
+service-account*.json
+
+# Volcados de base de datos y backups
+*.sql
+*.sql.gz
+*.dump
+*.bak
+backups/
+
 # Compiled output
 /dist
 /tmp
