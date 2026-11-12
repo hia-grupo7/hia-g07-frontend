@@ -1,0 +1,25 @@
+# Dependencias — se instalan dentro del contenedor
+node_modules
+
+# Build anterior — se regenera en el contenedor
+dist
+
+# Caché de Angular CLI
+.angular
+
+# Git
+.git
+.gitignore
+
+# Logs
+npm-debug.log*
+*.log
+
+# IDEs
+.vscode/
+.idea/
+
+# Docs y config de editor
+*.md
+.editorconfig
+.prettierrc
