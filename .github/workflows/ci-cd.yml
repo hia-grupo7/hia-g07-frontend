@@ -1,0 +1,198 @@
+name: CI/CD
+
+# Pipeline del frontend (CARD-11 / CICD-01).
+#   PR a dev/main  -> tests + build Docker + escaneo Trivy.
+#   push a dev/main -> lo anterior + version semantica + publicacion de la imagen en GHCR.
+# Una etapa que falla corta las siguientes: nada se publica si los tests o Trivy fallan.
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+    branches: [dev, main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-cd-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository }}
+  TRIVY_VERSION: "0.76.1"
+  TRIVY_SHA256: "c7cbe3137fb8a48a17574bede3dd6beb16742d1e9772929940fc90082c39d9c0"
+
+jobs:
+  # 1) Tests unitarios -----------------------------------------------------
+  test:
+    name: Tests unitarios
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Ejecutar tests
+        run: npm test -- --watch=false
+
+  # 2) Build de la imagen Docker + escaneo de vulnerabilidades --------------
+  docker-scan:
+    name: Build Docker y escaneo Trivy
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Construir imagen
+        run: docker build --pull --tag "${IMAGE_NAME}:scan" .
+
+      - name: Instalar Trivy (versión fija, checksum verificado)
+        run: |
+          curl -sSfL -o trivy.tar.gz \
+            "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz"
+          echo "${TRIVY_SHA256}  trivy.tar.gz" | sha256sum -c -
+          tar -xzf trivy.tar.gz trivy
+          sudo install -m 0755 trivy /usr/local/bin/trivy
+
+      # Bloqueante: cualquier vulnerabilidad CRITICAL o HIGH con corrección disponible
+      # hace fallar el pipeline (exit-code 1). --ignore-unfixed evita bloquear por fallos
+      # que todavía no tienen parche publicado.
+      - name: Escanear imagen con Trivy
+        run: |
+          trivy image \
+            --exit-code 1 \
+            --severity CRITICAL,HIGH \
+            --ignore-unfixed \
+            --no-progress \
+            "${IMAGE_NAME}:scan"
+
+  # 3) Versión semántica (Conventional Commits) ------------------------------
+  release:
+    name: Versión semántica
+    needs: [test, docker-scan]
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Checkout (historial y tags completos)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      # Lee los commits, calcula la versión (vX.Y.Z; en dev vX.Y.Z-dev.N), crea el tag y
+      # el release en GitHub con el CHANGELOG adjunto. Configuración en .releaserc.json.
+      - name: Ejecutar semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npx --yes \
+            -p semantic-release@25.0.9 \
+            -p @semantic-release/changelog@7.0.0 \
+            semantic-release
+
+      - name: Obtener versión publicada
+        id: version
+        run: |
+          tag="$(git tag --points-at HEAD --list 'v*' | head -n 1)"
+          echo "version=${tag#v}" >> "$GITHUB_OUTPUT"
+          if [ -z "$tag" ]; then
+            echo "No hay cambios que ameriten una nueva versión (sin feat/fix)." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Versión publicada: ${tag}" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  # 4) Publicación de la imagen en GitHub Container Registry -----------------
+  publish-image:
+    name: Publicar imagen en GHCR
+    needs: release
+    if: needs.release.outputs.version != ''
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      VERSION: ${{ needs.release.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Iniciar sesión en GHCR
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_USER: ${{ github.actor }}
+        run: echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+
+      - name: Construir y publicar
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          # main -> :latest ; dev -> :dev
+          if [ "$REF_NAME" = "main" ]; then MOVING_TAG="latest"; else MOVING_TAG="dev"; fi
+          docker build \
+            --label "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
+            --label "org.opencontainers.image.version=${VERSION}" \
+            --label "org.opencontainers.image.revision=${{ github.sha }}" \
+            --tag "${IMAGE_NAME}:${VERSION}" \
+            --tag "${IMAGE_NAME}:${MOVING_TAG}" \
+            .
+          docker push "${IMAGE_NAME}:${VERSION}"
+          docker push "${IMAGE_NAME}:${MOVING_TAG}"
+          echo "Imagen publicada: ${IMAGE_NAME}:${VERSION} (y :${MOVING_TAG})" >> "$GITHUB_STEP_SUMMARY"
+
+  # 5) Notificación de estado --------------------------------------------------
+  notify:
+    name: Notificación de estado
+    needs: [test, docker-scan, release, publish-image]
+    if: always()
+    runs-on: ubuntu-latest
+    env:
+      TEST_RESULT: ${{ needs.test.result }}
+      SCAN_RESULT: ${{ needs.docker-scan.result }}
+      RELEASE_RESULT: ${{ needs.release.result }}
+      PUBLISH_RESULT: ${{ needs.publish-image.result }}
+      # Opcional: URL de un webhook (por ejemplo n8n). Si el secreto no existe, solo se escribe el resumen.
+      NOTIFY_WEBHOOK_URL: ${{ secrets.NOTIFY_WEBHOOK_URL }}
+    steps:
+      - name: Resumen del pipeline
+        run: |
+          status="success"
+          for r in "$TEST_RESULT" "$SCAN_RESULT" "$RELEASE_RESULT" "$PUBLISH_RESULT"; do
+            if [ "$r" = "failure" ] || [ "$r" = "cancelled" ]; then status="failure"; fi
+          done
+          {
+            echo "## Estado del pipeline: ${status}"
+            echo ""
+            echo "| Etapa | Resultado |"
+            echo "|---|---|"
+            echo "| Tests unitarios | ${TEST_RESULT} |"
+            echo "| Build Docker y Trivy | ${SCAN_RESULT} |"
+            echo "| Versión semántica | ${RELEASE_RESULT} |"
+            echo "| Publicación en GHCR | ${PUBLISH_RESULT} |"
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "PIPELINE_STATUS=${status}" >> "$GITHUB_ENV"
+
+      - name: Avisar por webhook (si está configurado)
+        run: |
+          if [ -n "$NOTIFY_WEBHOOK_URL" ]; then
+            curl -sS -m 15 -X POST -H "Content-Type: application/json" \
+              -d "{\"repo\":\"${{ github.repository }}\",\"ref\":\"${{ github.ref_name }}\",\"status\":\"${PIPELINE_STATUS}\",\"run\":\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
+              "$NOTIFY_WEBHOOK_URL" || echo "No se pudo enviar la notificación (se ignora)."
+          fi
