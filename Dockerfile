@@ -25,8 +25,8 @@ LABEL maintainer="Grupo 7 HIA — Rayuela Librería Online"
 LABEL version="1.0.0"
 LABEL description="Frontend Angular para Rayuela — servido con Nginx Alpine"
 
-# Eliminar configuración por defecto de Nginx y archivos estáticos base
-RUN rm -rf /etc/nginx/conf.d/* /usr/share/nginx/html/*
+# Aplicar parches de Alpine (Trivy) y eliminar la configuración por defecto de Nginx y los estáticos base
+RUN apk upgrade --no-cache && rm -rf /etc/nginx/conf.d/* /usr/share/nginx/html/*
 
 # Copiar configuración personalizada de Nginx
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
