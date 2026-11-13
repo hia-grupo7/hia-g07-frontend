@@ -1,3 +1,6 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ReservasComponent } from './reservas.component';
@@ -9,6 +12,7 @@ describe('ReservasComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ReservasComponent],
+      providers: [provideRouter([{ path: 'login', children: [] }]), provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ReservasComponent);
