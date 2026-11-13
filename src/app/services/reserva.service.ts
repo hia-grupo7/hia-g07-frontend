@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ReservaService {
-  // Ajustá el puerto 3000 si tu Node.js usa otro
-  private apiUrl = 'http://localhost:3000/api/reservas';
+  // AjustÃ¡ el puerto 3000 si tu Node.js usa otro
+  private apiUrl = '/api/reservas';
 
   constructor(private http: HttpClient) { }
 

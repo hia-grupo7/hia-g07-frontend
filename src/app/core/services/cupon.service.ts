@@ -9,7 +9,7 @@ import { Cupon, CuponBackendPayload, CuponBackendResponse } from '../models/cupo
 })
 export class CuponService {
 
-    urlHost: string = 'http://localhost:3000/';
+    urlHost: string = '/';
     urlBase: string = this.urlHost + 'api/cupones';
 
     httpOptions = {

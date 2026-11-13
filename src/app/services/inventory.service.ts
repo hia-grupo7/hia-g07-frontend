@@ -58,7 +58,7 @@ export class InventoryService {
     }
 
     return this.httpClient.get<PaginatedInventoryResponse>(
-      `http://localhost:3000/api/inventario/?${params.toString()}`,
+      `/api/inventario/?${params.toString()}`,
       httpOptions
     );
   }
@@ -69,7 +69,7 @@ export class InventoryService {
         'Content-Type': 'application/json',
       },
     };
-    return this.httpClient.get<Inventory | undefined>(`http://localhost:3000/api/inventario/${id}`, httpOptions);
+    return this.httpClient.get<Inventory | undefined>(`/api/inventario/${id}`, httpOptions);
   }
 
   postInventory(inventory: InventoryPayload): Observable<Inventory> {
@@ -78,7 +78,7 @@ export class InventoryService {
         'Content-Type': 'application/json',
       },
     };
-    return this.httpClient.post<Inventory>('http://localhost:3000/api/inventario', inventory, httpOptions);
+    return this.httpClient.post<Inventory>('/api/inventario', inventory, httpOptions);
   }
 
   putInventory(id: number, inventory: InventoryPayload): Observable<Inventory> {
@@ -87,7 +87,7 @@ export class InventoryService {
         'Content-Type': 'application/json',
       },
     };
-    return this.httpClient.put<Inventory>(`http://localhost:3000/api/inventario/${id}`, inventory, httpOptions);
+    return this.httpClient.put<Inventory>(`/api/inventario/${id}`, inventory, httpOptions);
   }
 
   deleteInventory(id: number): Observable<void> {
@@ -96,6 +96,6 @@ export class InventoryService {
         'Content-Type': 'application/json',
       },
     };
-    return this.httpClient.delete<void>(`http://localhost:3000/api/inventario/${id}`, httpOptions);
+    return this.httpClient.delete<void>(`/api/inventario/${id}`, httpOptions);
   }
 }
