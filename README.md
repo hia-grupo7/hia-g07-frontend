@@ -72,6 +72,35 @@ npm start          # ng serve → http://localhost:4200
 
 ---
 
+## CI/CD
+
+El pipeline vive en `.github/workflows/ci-cd.yml` (GitHub Actions) y se ejecuta en cada Pull Request y en cada push a `dev` y `main`.
+
+| Etapa | Cuándo corre | Qué hace |
+|---|---|---|
+| Tests unitarios | PR y push | `npm ci` y ejecuta `npm test -- --watch=false` (Vitest, con Node 24 por requisito del CLI de Angular). |
+| Build Docker y Trivy | PR y push | Construye la imagen y la escanea con Trivy. **Falla** ante vulnerabilidades `CRITICAL` o `HIGH` que ya tengan parche. |
+| Versión semántica | push a `dev` / `main` | `semantic-release` calcula la versión desde los commits, crea el tag y el release en GitHub con el `CHANGELOG.md` adjunto. |
+| Publicación en GHCR | push, si hubo versión nueva | Publica `ghcr.io/hia-grupo7/hia-g07-frontend:<versión>` (más `:dev` o `:latest` según la rama). |
+| Notificación | siempre | Resumen del estado en la pestaña del run y, si existe el secreto `NOTIFY_WEBHOOK_URL`, aviso por webhook. |
+
+Cada etapa depende de la anterior: si fallan los tests o Trivy, no se versiona ni se publica nada.
+
+**Versionado.** `fix` sube el parche, `feat` sube el minor y `BREAKING CHANGE` (o `!`) sube el major. En `dev` salen prereleases (`v1.1.0-dev.1`) y en `main` versiones estables (`v1.1.0`). Como `dev` y `main` se fusionan con squash o merge commit, **el título del Pull Request debe seguir Conventional Commits** (por ejemplo `feat(CARD-12): agregar filtro por categoría`). Un título sin tipo (`[CARD-12] ...`) no genera versión.
+
+**Secretos.** El pipeline usa solo el `GITHUB_TOKEN` automático. No hay credenciales en el repositorio.
+
+**Probar en tu máquina antes del PR:**
+
+```bash
+npm test -- --watch=false
+docker build -t rayuela-frontend .
+# Escaneo igual al del pipeline (requiere Docker):
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:0.76.1 \n  image --severity CRITICAL,HIGH --ignore-unfixed rayuela-frontend
+```
+
+---
+
 ## Guía de contribución
 
 Este repositorio usa un flujo **GitFlow simplificado**. Resumen:
@@ -129,6 +158,7 @@ Si subís un secreto por error: **revocalo en el proveedor de inmediato** y avis
 ### Antes de abrir un Pull Request
 
 - [ ] La rama está actualizada con `dev` y los commits siguen Conventional Commits.
+- [ ] `npm test -- --watch=false` pasa en local y el título del PR sigue Conventional Commits (define la versión).
 - [ ] No hay credenciales en el diff (`git diff` y `git status`).
 - [ ] La tarea cumple los criterios de aceptación de la tarjeta de Trello y se adjuntó evidencia.
 
