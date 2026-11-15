@@ -68,6 +68,7 @@ npm start          # ng serve → http://localhost:4200
 | `npm start` | Servidor de desarrollo (`ng serve`) |
 | `npm run build` | Compilación de producción en `dist/` |
 | `npm run watch` | Compilación en modo desarrollo con observación de cambios |
+| `npm run lint` | Análisis estático con ESLint (el mismo que corre en el pipeline) |
 | `npm test` | Pruebas unitarias (`ng test`, Vitest) |
 
 ---
@@ -78,6 +79,7 @@ El pipeline vive en `.github/workflows/ci-cd.yml` (GitHub Actions) y se ejecuta 
 
 | Etapa | Cuándo corre | Qué hace |
 |---|---|---|
+| Lint (ESLint) | PR y push | `npm ci` y ejecuta `npm run lint`. **Falla** ante errores; los avisos (`warn`) no bloquean. |
 | Tests unitarios | PR y push | `npm ci` y ejecuta `npm test -- --watch=false` (Vitest, con Node 24 por requisito del CLI de Angular). |
 | Build Docker y Trivy | PR y push | Construye la imagen y la escanea con Trivy. **Falla** ante vulnerabilidades `CRITICAL` o `HIGH` que ya tengan parche. |
 | Versión semántica | push a `dev` / `main` | `semantic-release` calcula la versión desde los commits, crea el tag y el release en GitHub con el `CHANGELOG.md` adjunto. |
@@ -158,7 +160,7 @@ Si subís un secreto por error: **revocalo en el proveedor de inmediato** y avis
 ### Antes de abrir un Pull Request
 
 - [ ] La rama está actualizada con `dev` y los commits siguen Conventional Commits.
-- [ ] `npm test -- --watch=false` pasa en local y el título del PR sigue Conventional Commits (define la versión).
+- [ ] `npm run lint` y `npm test -- --watch=false` pasan en local y el título del PR sigue Conventional Commits (define la versión).
 - [ ] No hay credenciales en el diff (`git diff` y `git status`).
 - [ ] La tarea cumple los criterios de aceptación de la tarjeta de Trello y se adjuntó evidencia.
 

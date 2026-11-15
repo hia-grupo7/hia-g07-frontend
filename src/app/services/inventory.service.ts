@@ -73,7 +73,7 @@ export class InventoryService {
   }
 
   postInventory(inventory: InventoryPayload): Observable<Inventory> {
-    let httpOptions = {
+    const httpOptions = {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -82,7 +82,7 @@ export class InventoryService {
   }
 
   putInventory(id: number, inventory: InventoryPayload): Observable<Inventory> {
-    let httpOptions = {
+    const httpOptions = {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -91,7 +91,7 @@ export class InventoryService {
   }
 
   deleteInventory(id: number): Observable<void> {
-    let httpOptions = {
+    const httpOptions = {
       headers: {
         'Content-Type': 'application/json',
       },

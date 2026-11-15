@@ -35,7 +35,7 @@ export class CuponForm implements OnInit {
     if(this.currentUserRol !== 'Administrador' && this.currentUserRol !== 'Empleado') return;
 
     this.activatedRoute.params.subscribe( params => {
-      let id = params['id'];
+      const id = params['id'];
       if (id == 0) {
         this.accion = "agregar";
         this.cuponActual = null;
