@@ -36,7 +36,7 @@ export class UserForm implements OnInit {
     }
 
     this.activatedRoute.params.subscribe(params => {
-      let id = params['id'];
+      const id = params['id'];
       if (id == 0) {
         this.accion = "agregar";
       } else {
