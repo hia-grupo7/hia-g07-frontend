@@ -8,7 +8,7 @@ import { Usuario } from '../models/usuario.model';
 })
 export class UsuarioService {
 
-    urlHost: string = "http://localhost:3000/";
+    urlHost: string = "/";
     urlBase: string = this.urlHost + "api/admin/usuario/";
 
     httpOptions = {

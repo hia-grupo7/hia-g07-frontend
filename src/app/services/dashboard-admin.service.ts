@@ -9,27 +9,27 @@ import { ChartConfiguration, ChartType } from 'chart.js';
 export class DashboardAdminService {
 
   
-  private apiUrlDashboard = 'http://localhost:3000/api/dashboard';
-  private apiUrlAuditorias = 'http://localhost:3000/api/auditorias';
+  private apiUrlDashboard = '/api/dashboard';
+  private apiUrlAuditorias = '/api/auditorias';
 
   constructor(private http: HttpClient) { }
 
   /**
-   * 1. Trae los datos de las 3 Cards (ingresos, porcentaje, reservas y stock crítico)
+   * 1. Trae los datos de las 3 Cards (ingresos, porcentaje, reservas y stock crÃ­tico)
    */
   getMetricasCards(): Observable<any> {
     return this.http.get<any>(`${this.apiUrlDashboard}/metricas-cards`);
   }
 
   /**
-   * 2. Trae el histórico de ingresos mensual para el gráfico de barras
+   * 2. Trae el histÃ³rico de ingresos mensual para el grÃ¡fico de barras
    */
   getHistoricoVentas(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrlDashboard}/ventas-mensuales`);
   }
 
   /**
-   * 3. Trae el Top de libros más vendidos para el gráfico de torta
+   * 3. Trae el Top de libros mÃ¡s vendidos para el grÃ¡fico de torta
    */
   getTopLibros(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrlDashboard}/top-libros`);
@@ -53,8 +53,8 @@ export class DashboardAdminService {
 }
 
   /**
-   * Helper para armar la configuración que ng2-charts y Chart.js necesitan.
-   * Mantenemos tu lógica pero le damos tipado para que no chille TypeScript.
+   * Helper para armar la configuraciÃ³n que ng2-charts y Chart.js necesitan.
+   * Mantenemos tu lÃ³gica pero le damos tipado para que no chille TypeScript.
    */
   crearConfiguracionGrafico(
     tipo: ChartType,

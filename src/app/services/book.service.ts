@@ -9,7 +9,7 @@ export type BookPayload = Omit<Book, 'id'>;
   providedIn: 'root',
 })
 export class BookService {
-  private readonly urlBase = 'http://localhost:3000/api/libros';
+  private readonly urlBase = '/api/libros';
 
   private readonly httpOptions = {
     headers: new HttpHeaders({

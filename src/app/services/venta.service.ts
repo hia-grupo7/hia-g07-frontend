@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class VentaService {
   // Ajusta el puerto 3000 si tu backend corre en otro
-  private apiUrl = 'http://localhost:3000/api/ventas';
+  private apiUrl = '/api/ventas';
 
   constructor(private http: HttpClient) { }
 

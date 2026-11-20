@@ -1,0 +1,4 @@
+# Dueños del código: GitHub pide su revisión automáticamente en cada Pull Request.
+# El autor del PR no se solicita a sí mismo. La aprobación sigue regida por los
+# rulesets protect-dev (1 aprobación) y protect-main (2 aprobaciones).
+* @facugsXXI @peluk467 @Nachitott @juanjujuy @brunofernandez877

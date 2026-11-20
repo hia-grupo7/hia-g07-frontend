@@ -67,7 +67,7 @@ export class DashboardAdminComponent implements OnInit {
         this.cdr.detectChanges();
       },
       (err) => {
-        console.error('Error al cargar auditorías:', err);
+        console.error('Error al cargar auditorÃ­as:', err);
       }
     );
   }
@@ -95,7 +95,7 @@ export class DashboardAdminComponent implements OnInit {
         this.cdr.detectChanges(); // Forzamos renderizado en la vista
       },
       (err) => {
-        console.error('Error al cargar métricas de cards:', err);
+        console.error('Error al cargar mÃ©tricas de cards:', err);
       }
     );
   }
@@ -145,13 +145,13 @@ export class DashboardAdminComponent implements OnInit {
   }
 
   exportarPDF() {
-    const url = 'http://localhost:3000/api/dashboard/reporte-pdf';
+    const url = '/api/dashboard/reporte-pdf';
     window.open(url, '_blank');
   }
 
-  // Descarga real de Excel forzando la descarga directa en la misma pestaña
+  // Descarga real de Excel forzando la descarga directa en la misma pestaÃ±a
   exportarExcel() {
-    const url = 'http://localhost:3000/api/dashboard/reporte-excel';
+    const url = '/api/dashboard/reporte-excel';
     window.location.href = url;
   }
 
@@ -164,9 +164,9 @@ export class DashboardAdminComponent implements OnInit {
     clearTimeout(this.timeoutBusqueda);
   }
 
-  // Esperamos 400 milisegundos después de que dejó de escribir para mandar la petición
+  // Esperamos 400 milisegundos despuÃ©s de que dejÃ³ de escribir para mandar la peticiÃ³n
   this.timeoutBusqueda = setTimeout(() => {
-    this.paginaActual = 1; // Reseteamos a la página 1 para que no busque desfasado
+    this.paginaActual = 1; // Reseteamos a la pÃ¡gina 1 para que no busque desfasado
     this.cargarAuditorias();
   }, 400);
 }

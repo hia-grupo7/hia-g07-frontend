@@ -7,7 +7,7 @@ import { Usuario, AuthResponse } from '../models/usuario.model';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api/auth';
+  private apiUrl = '/api/auth';
   
   private currentUserSubject: BehaviorSubject<Usuario | null>;
   public currentUser$: Observable<Usuario | null>;
@@ -35,7 +35,7 @@ export class AuthService {
 
   login(credenciales: { email: string; password: string }): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credenciales).pipe(
-      tap((response: AuthResponse) => { // <-- Tipado explícito agregado
+      tap((response: AuthResponse) => { // <-- Tipado explÃ­cito agregado
         if (response.status === 1 && response.token && response.usuario) {
           response.usuario = this.normalizarUsuario(response.usuario);
           this.guardarSesion(response.token, response.usuario);
@@ -46,7 +46,7 @@ export class AuthService {
 
   verificar2FA(userId: number, otpCode: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/verificar-2fa`, { userId, otpCode }).pipe(
-      tap((response: AuthResponse) => { // <-- Tipado explícito agregado
+      tap((response: AuthResponse) => { // <-- Tipado explÃ­cito agregado
         if (response.status === 1 && response.token && response.usuario) {
           response.usuario = this.normalizarUsuario(response.usuario);
           this.guardarSesion(response.token, response.usuario);
@@ -57,7 +57,7 @@ export class AuthService {
 
   loginGoogle(tokenGoogle: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/google`, { tokenGoogle }).pipe(
-      tap((response: AuthResponse) => { // <-- Tipado explícito agregado
+      tap((response: AuthResponse) => { // <-- Tipado explÃ­cito agregado
         if (response.status === 1 && response.token && response.usuario) {
           response.usuario = this.normalizarUsuario(response.usuario);
           this.guardarSesion(response.token, response.usuario);

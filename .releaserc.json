@@ -1,0 +1,21 @@
+{
+  "branches": [
+    "main",
+    { "name": "dev", "prerelease": "dev", "channel": "dev" }
+  ],
+  "tagFormat": "v${version}",
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    ["@semantic-release/changelog", { "changelogFile": "CHANGELOG.md" }],
+    [
+      "@semantic-release/github",
+      {
+        "assets": [{ "path": "CHANGELOG.md", "label": "CHANGELOG" }],
+        "successComment": false,
+        "failComment": false,
+        "releasedLabels": false
+      }
+    ]
+  ]
+}
